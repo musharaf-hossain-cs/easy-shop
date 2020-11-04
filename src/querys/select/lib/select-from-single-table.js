@@ -1,6 +1,7 @@
 const db = require('../../../db/connectdb');
 
 async function select(input){
+
     return await db.executeQuery(
         `SELECT ${input.selection}
                FROM ${input.tablename}

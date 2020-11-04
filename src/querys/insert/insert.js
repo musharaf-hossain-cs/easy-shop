@@ -10,10 +10,9 @@ const productModel = require('./lib/insertProduct-model');
 
 const idmaker = require('../../lib/idmaker');
 
-let id = idmaker.makeId();
 
 async function Insert(input){
-    input.id = id;
+    input.id = idmaker.makeId();
     if(input.tablename.toLowerCase() === 'carts'){
         await cart.insert(input);
     }

@@ -1,9 +1,13 @@
 const db = require('../../../db/connectdb');
+const newDb = require('../../../db/dbForImage');
 
 async function insert(input){
-    await db.executeQuery(
+    let abc = [];
+    abc = input.image;
+    const query =
         `INSERT INTO PERSONS 
-      (PERSON_ID, FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, ADDRESS, EMAIL, MOBILE, DOB,GENDER)
+      (PERSON_ID, FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, ADDRESS, EMAIL, 
+      MOBILE, DOB,GENDER,IMAGE)
        VALUES( 
         \'${input.id}\',
         \'${input.first_name}\',
@@ -13,10 +17,10 @@ async function insert(input){
         \'${input.address}\',
         \'${input.email}\',
         \'${input.mobile}\',
-        TO_DATE(\'${input.dob}\',\'dd\/mm\/yyyy\'),
-        \'${input.gender}\'
-        ) `
-    );
+        TO_DATE(\'${input.dob}\',\'yyyy\/mm\/dd\'),
+        \'${input.gender}\'`;
+
+    await newDb.executeQuery(query,abc);
 }
 
 module.exports = {
