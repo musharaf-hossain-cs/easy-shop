@@ -18,5 +18,6 @@ function makeId(){//3.9*10^17
 }
 
 module.exports = {
-  makeId
+    makeId,
+    randText
 };

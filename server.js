@@ -10,6 +10,7 @@ const io = socketIO(server);
 const select = require('./src/querys/select/select');
 const check = require('./src/querys/select/check');
 const insert  = require('./src/querys/insert/insert');
+const login = require('./src/querys/select/login');
 
 io.on('connection', socket => {
     console.log('User Connected!');
@@ -36,6 +37,10 @@ io.on('connection', socket => {
         }catch (e){
             console.log(e);
         }
+    });
+    socket.on('login', async (data) => {
+        let res = await login.login(data);
+        socket.emit('loginInfo', res);
     });
 });
 
