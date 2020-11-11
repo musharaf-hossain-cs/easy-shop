@@ -4,7 +4,8 @@ const idMaker = require('../../lib/idmaker');
 
 async function fetchData(data){
     const query =
-        `select c.customer_id, c.status, p.username, p.password
+        `select c.customer_id, c.status, p.username, p.password, p.first_name, 
+        p.last_name
          from persons p JOIN customers c
          on c.customer_id = p.person_id
          where p.username = \'${data.username}\' `;
@@ -21,14 +22,20 @@ async function login(data){
         };
     }
     else{
-        if(rows[0].PASSWORD === data.password){
+        let res = rows[0];
+        if(res.PASSWORD === data.password){
             let token = users.getLength() + idMaker.randText(5);
-            token = users.addUser(rows[0].CUSTOMER_ID, token);
+            token = users.addUser(res.CUSTOMER_ID, token);
             return {
                 success: true,
                 error: '',
                 msg: 'Login Successful',
-                token: token
+                user: {
+                    token: token,
+                    username: res.USERNAME,
+                    first_name: res.FIRST_NAME,
+                    last_name: res.LAST_NAME
+                }
             };
         }else{
             return{

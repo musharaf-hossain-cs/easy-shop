@@ -11,8 +11,8 @@ function randText(length) {
 function makeId(){//3.9*10^17
     let id="";
     let d = new Date();
-    id = id + randText(2) + d.getFullYear() + randText(2) + d.getMonth()
-        + randText(2) + d.getDay() + randText(2) + d.getHours() + randText(2)
+    id = id + randText(2) + d.getMonth()
+        + randText(1) + d.getDay() + randText(1) + d.getHours() + randText(1)
         + d.getMinutes() + d.getSeconds() + d.getMilliseconds();
     return id;
 }
