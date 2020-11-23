@@ -2,7 +2,7 @@ const oracledb = require('oracledb');
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 oracledb.autoCommit = true;
 
-async function executeQuery(query,abc){
+async function executeQuery(query,img){
     let connection;
     try{
         connection = await oracledb.getConnection({
@@ -19,14 +19,15 @@ async function executeQuery(query,abc){
             }
         };
         if(connection) console.log('Connection Successful');
-        const result = await connection.execute(
+        await connection.execute(
             `${query},
-            :content)`,[abc]
+            :content)`,[img]
         );
-        return result.rows;
+        return true;
 
     }catch(err){
         console.error(err);
+        return false;
     }finally {
         if(connection){
             try{

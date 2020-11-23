@@ -1,9 +1,8 @@
-const db = require('../../../db/connectdb');
 const newDb = require('../../../db/dbForImage');
 
 async function insert(input){
-    let abc = [];
-    abc = input.image;
+    let img;
+    img = input.image;
     const query =
         `INSERT INTO PERSONS 
       (PERSON_ID, FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, ADDRESS, EMAIL, 
@@ -20,7 +19,7 @@ async function insert(input){
         TO_DATE(\'${input.dob}\',\'yyyy\/mm\/dd\'),
         \'${input.gender}\'`;
 
-    await newDb.executeQuery(query,abc);
+    await newDb.executeQuery(query,img);
 }
 
 module.exports = {

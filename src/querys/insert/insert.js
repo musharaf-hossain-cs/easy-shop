@@ -38,7 +38,7 @@ async function Insert(input){
         await product.insert(input);
     }
     if(input.tablename.toLowerCase() === 'product_models'){
-        await productModel.insert(input);
+        return await productModel.insert(input);
     }
 
 }
