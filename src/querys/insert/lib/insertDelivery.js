@@ -1,7 +1,7 @@
-const db = require('../../../db/connectdb');
+const dbInsert = require('../../../db/dbInsert');
 
 async function insert(input){
-    await db.executeQuery(
+    let res = await dbInsert.executeQuery(
         `INSERT INTO DELIVERY
         (DELIVERY_ID, CUSTOMER_ID, PAYMENT_ID, EMPLOYEE_ID,
         STATUS, SHIPMENT_DATE, DELIVERY_DATE)
@@ -15,6 +15,15 @@ async function insert(input){
             TO_DATE(\'${input.deliveryDate}\',\'dd\/mm\/yyyy\')
         )`
     );
+    if(res){
+        return {
+            success: true
+        };
+    }else{
+        return{
+            success: false
+        };
+    }
 }
 
 module.exports = {

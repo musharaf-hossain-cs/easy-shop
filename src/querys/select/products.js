@@ -1,9 +1,9 @@
-const db = require('../../db/connectdb');
+const db = require('../../db/dbSelect');
 const oracledb = require('oracledb');
 
 async function getProducts(){
     const query =
-        `SELECT MODEL_ID, MODEL_NAME, CATEGORY,PRICE, IMAGE,STOCK
+        `SELECT MODEL_ID, MODEL_NAME, CATEGORY,PRICE, IMAGE,STOCK,DISCOUNT
          FROM PRODUCT_MODELS`;
     const binds = {};
     const opts = {

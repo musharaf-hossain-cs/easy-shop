@@ -1,7 +1,7 @@
-const db = require('../../../db/connectdb');
+const dbInsert = require('../../../db/dbInsert');
 
 async function insert(input){
-    await db.executeQuery(
+    return await dbInsert.executeQuery(
         `INSERT INTO PAYMENTS
         (PAYMENT_ID, PAYMENT_TYPE, AMOUNT, PAYMENT_DATE, PAYMENT_STATUS)
         VALUES(
@@ -12,6 +12,15 @@ async function insert(input){
             \'${input.paymentStatus}\'
         )`
     );
+    if(res){
+        return {
+            success: true
+        };
+    }else{
+        return{
+            success: false
+        };
+    }
 }
 
 module.exports = {

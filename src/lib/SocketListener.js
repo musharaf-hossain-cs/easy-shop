@@ -5,6 +5,7 @@ const check = require('../querys/select/check');
 const insert  = require('../querys/insert/insert');
 const login = require('../querys/select/login');
 const product = require('../querys/select/products');
+const update = require('../querys/update/update');
 
 function setServer(server){
     const io = socketIO(server);
@@ -31,7 +32,12 @@ function setServer(server){
             try{
                 let res = await insert.Insert(data);
                 console.log(res);
-                socket.emit('insertProductRes',res);
+                if(data.tablename.toLowerCase()==='product_models'){
+                    socket.emit('insertProductRes',res);
+                }
+                else if(data.tablename.toLowerCase()==='customers'){
+                    socket.emit('insertCustomerRes',res);
+                }
             }catch (e){
                 console.log(e);
             }
@@ -49,6 +55,10 @@ function setServer(server){
             let res = await product.getProduct(input.id);
             socket.emit('getProductAdmin', res);
 
+        });
+        socket.on('update', async (input) => {
+            let res = await update.update(input);
+            socket.emit('updateResponse',res);
         });
 
     });

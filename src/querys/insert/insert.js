@@ -14,28 +14,28 @@ const idmaker = require('../../lib/idmaker');
 async function Insert(input){
     input.id = idmaker.makeId();
     if(input.tablename.toLowerCase() === 'carts'){
-        await cart.insert(input);
+        return await cart.insert(input);
     }
     if(input.tablename.toLowerCase() === 'customers'){
-        await customer.insert(input);
+        return await customer.insert(input);
     }
     if(input.tablename.toLowerCase() === 'delivery'){
-        await delivery.insert(input);
+        return await delivery.insert(input);
     }
     if(input.tablename.toLowerCase() === 'employees'){
-        await employee.insert(input);
+        return await employee.insert(input);
     }
     if(input.tablename.toLowerCase() === 'jobs'){
-        await job.insert(input);
+        return await job.insert(input);
     }
     if(input.tablename.toLowerCase() === 'orders'){
-        await order.insert(input);
+        return await order.insert(input);
     }
     if(input.tablename.toLowerCase() === 'payments'){
-        await payment.insert(input);
+        return await payment.insert(input);
     }
     if(input.tablename.toLowerCase() === 'products'){
-        await product.insert(input);
+        return await product.insert(input);
     }
     if(input.tablename.toLowerCase() === 'product_models'){
         return await productModel.insert(input);

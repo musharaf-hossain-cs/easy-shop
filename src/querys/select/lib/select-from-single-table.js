@@ -1,4 +1,4 @@
-const db = require('../../../db/connectdb');
+const db = require('../../../db/dbSelect');
 
 async function select(input){
 

@@ -1,4 +1,4 @@
-const newDb = require('../../../db/dbForImage');
+const dbForImage = require('../../../db/dbInsertImage');
 
 async function insert(input){
     let img;
@@ -19,7 +19,7 @@ async function insert(input){
         TO_DATE(\'${input.dob}\',\'yyyy\/mm\/dd\'),
         \'${input.gender}\'`;
 
-    await newDb.executeQuery(query,img);
+    return await dbForImage.executeQuery(query,img);
 }
 
 module.exports = {

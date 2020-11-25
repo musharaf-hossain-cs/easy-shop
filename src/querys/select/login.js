@@ -1,5 +1,5 @@
 const users = require('../../lib/users');
-const db = require('../../db/connectdb');
+const db = require('../../db/dbSelect');
 const idMaker = require('../../lib/idmaker');
 
 async function fetchData(data){

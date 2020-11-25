@@ -1,7 +1,7 @@
-const db = require('../../../db/connectdb');
+const dbInsert = require('../../../db/dbInsert');
 
 async function insert(input){
-    await db.executeQuery(
+    let res = await dbInsert.executeQuery(
         `INSERT INTO CARTS
         (CART_ID, CUSTOMER_ID, CREATE_DATE, EXPIRE_DATE, TOTAL_COST)
         VALUES(
@@ -12,6 +12,15 @@ async function insert(input){
             ${input.totalCost}
         )`
     );
+    if(res){
+        return {
+            success: true
+        };
+    }else{
+        return{
+            success: false
+        };
+    }
 }
 
 module.exports = {

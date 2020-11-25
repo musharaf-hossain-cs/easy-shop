@@ -1,7 +1,7 @@
-const db = require('../../../db/connectdb');
+const dbInsert = require('../../../db/dbInsert');
 
 async function insert(input){
-    await db.executeQuery(
+    let res = await dbInsert.executeQuery(
         `INSERT INTO JOBS
         (JOB_ID, JOB_TITLE, SALARY)
         VALUES(
@@ -10,6 +10,15 @@ async function insert(input){
             ${input.salary}
         )`
     );
+    if(res){
+        return {
+            success: true
+        };
+    }else{
+        return{
+            success: false
+        };
+    }
 }
 
 module.exports = {

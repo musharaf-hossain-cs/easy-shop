@@ -1,4 +1,4 @@
-const db = require('../../db/connectdb');
+const db = require('../../db/dbSelect');
 const oracledb = require('oracledb');
 
 async function check(data){

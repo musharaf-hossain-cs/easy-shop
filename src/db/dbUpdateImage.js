@@ -2,7 +2,7 @@ const oracledb = require('oracledb');
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 oracledb.autoCommit = true;
 
-async function executeQuery(query,img){
+async function executeQuery(query,img,where){
     let connection;
     try{
         connection = await oracledb.getConnection({
@@ -10,18 +10,11 @@ async function executeQuery(query,img){
             password      : "easyshop",
             connectString : "localhost/ORCL"
         });
-        const binds = {};
-        const opts = {
-            fetchInfo: {
-                IMAGE:{
-                    type: oracledb.BUFFER
-                }
-            }
-        };
         if(connection) console.log('Connection Successful');
         await connection.execute(
-            `${query},
-            :content)`,[img]
+            `${query}
+            :content
+            ${where}`,[img]
         );
         return true;
 
