@@ -1,5 +1,6 @@
 const db = require('../../db/dbSelect');
 const oracledb = require('oracledb');
+const selectFromSingleTable = require('./lib/select-from-single-table');
 
 async function getCustomer(){
     const query =
@@ -18,7 +19,15 @@ async function getCustomer(){
 }
 
 async function select(input){
-
+    if(input.command === 'jobNotice'){
+        let data = {
+            selection: '*',
+            tablename: 'notices',
+            condition: '5=5',
+            orderby: 'FIELD ASC'
+        }
+        return await selectFromSingleTable.select(data);
+    }
 }
 
 module.exports = {

@@ -7,6 +7,7 @@ const order = require('./lib/insertOrder');
 const payment = require('./lib/insertPayment');
 const product = require('./lib/insertProduct');
 const productModel = require('./lib/insertProduct-model');
+const notices = require('./lib/insertNotice');
 
 const idmaker = require('../../lib/idmaker');
 
@@ -39,6 +40,9 @@ async function Insert(input){
     }
     if(input.tablename.toLowerCase() === 'product_models'){
         return await productModel.insert(input);
+    }
+    if(input.tablename.toLowerCase() === 'notices'){
+        return await notices.insert(input);
     }
 
 }

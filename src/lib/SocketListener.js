@@ -38,6 +38,12 @@ function setServer(server){
                 else if(data.tablename.toLowerCase()==='customers'){
                     socket.emit('insertCustomerRes',res);
                 }
+                else if(data.tablename.toLowerCase()==='notices'){
+                    socket.emit('insertNoticeRes',res);
+                }
+                else if(data.tablename.toLowerCase()==='employees'){
+                    socket.emit('insertEmployeeRes',res);
+                }
             }catch (e){
                 console.log(e);
             }
@@ -60,7 +66,10 @@ function setServer(server){
             let res = await update.update(input);
             socket.emit('updateResponse',res);
         });
-
+        socket.on('sendJobNotices', async () => {
+            let res = await select.select({command: 'jobNotice'});
+            socket.emit('getJobNotices',res);
+        });
     });
 }
 

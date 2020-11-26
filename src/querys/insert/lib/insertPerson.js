@@ -6,7 +6,7 @@ async function insert(input){
     const query =
         `INSERT INTO PERSONS 
       (PERSON_ID, FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, ADDRESS, EMAIL, 
-      MOBILE, DOB,GENDER,IMAGE)
+      MOBILE, DOB,GENDER,TYPE, IMAGE)
        VALUES( 
         \'${input.id}\',
         \'${input.first_name}\',
@@ -17,7 +17,8 @@ async function insert(input){
         \'${input.email}\',
         \'${input.mobile}\',
         TO_DATE(\'${input.dob}\',\'yyyy\/mm\/dd\'),
-        \'${input.gender}\'`;
+        \'${input.gender}\',
+        \'${input.type}\'`;
 
     return await dbForImage.executeQuery(query,img);
 }
