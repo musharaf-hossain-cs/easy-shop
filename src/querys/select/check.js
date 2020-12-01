@@ -6,8 +6,8 @@ async function check(data){
         `SELECT *
         FROM ${data.tablename}
         WHERE ${data.field} = \'${data.value}\'`;
-
     let result = await db.executeQuery(query);
+    console.log(result);
     return result;
 }
 

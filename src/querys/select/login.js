@@ -4,11 +4,10 @@ const idMaker = require('../../lib/idmaker');
 
 async function fetchData(data){
     const query =
-        `select c.customer_id, c.status, p.username, p.password, p.first_name, 
-        p.last_name
-         from persons p JOIN customers c
-         on c.customer_id = p.person_id
-         where p.username = \'${data.username}\' `;
+        `SELECT PERSON_ID, USERNAME, PASSWORD, FIRST_NAME, LAST_NAME,
+         IMAGE, TYPE, PERSON_STATUS(PERSON_ID,TYPE) AS "STATUS"
+         FROM PERSONS
+         WHERE USERNAME = \'${data.username}\'`;
     return await db.executeQuery(query);
 }
 
@@ -25,7 +24,7 @@ async function login(data){
         let res = rows[0];
         if(res.PASSWORD === data.password){
             let token = users.getLength() + idMaker.randText(5);
-            token = users.addUser(res.CUSTOMER_ID, token);
+            token = users.addUser(res.PERSON_ID, token);
             return {
                 success: true,
                 error: '',
@@ -34,7 +33,10 @@ async function login(data){
                     token: token,
                     username: res.USERNAME,
                     first_name: res.FIRST_NAME,
-                    last_name: res.LAST_NAME
+                    last_name: res.LAST_NAME,
+                    image: res.IMAGE,
+                    status: res.STATUS,
+                    type: res.TYPE
                 }
             };
         }else{

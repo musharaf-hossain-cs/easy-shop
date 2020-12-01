@@ -3,9 +3,15 @@ const socketIO = require('socket.io');
 const select = require('../querys/select/select');
 const check = require('../querys/select/check');
 const insert  = require('../querys/insert/insert');
+const update = require('../querys/update/update');
+
 const login = require('../querys/select/login');
 const product = require('../querys/select/products');
-const update = require('../querys/update/update');
+const employee = require('../querys/select/employee');
+const requestProcessor = require('../querys/update/requestProcess');
+const report = require('../querys/select/report');
+const persons = require('../querys/select/persons');
+const changePassword = require('../querys/update/changePassword');
 
 function setServer(server){
     const io = socketIO(server);
@@ -25,8 +31,8 @@ function setServer(server){
         socket.on('check',async (data)=>{
             let result = await check.check(data);
             console.log(result.length);
-            let found = result.length === 0;
-            socket.emit(data.command, found);
+            let notFound = result.length === 0;
+            socket.emit(data.command, notFound);
         });
         socket.on('insert', async (data)=>{
             try{
@@ -69,6 +75,47 @@ function setServer(server){
         socket.on('sendJobNotices', async () => {
             let res = await select.select({command: 'jobNotice'});
             socket.emit('getJobNotices',res);
+        });
+        socket.on('sendEmployeeRequests', async () => {
+            let res = await select.select({command: 'employeeRequests'});
+            socket.emit('getEmployeeRequests',res);
+        });
+        socket.on('sendEmployee', async (input) => {
+            let res = await employee.getEmployee(input.id);
+            socket.emit('getEmployee', res);
+        });
+        socket.on('sendEmployeeID', async (input) => {
+            let res = await employee.getEmployeeID(input);
+            socket.emit('getEmployeeID', res);
+        });
+        socket.on('sendEmployees', async () => {
+            let res = await employee.getEmployees();
+            socket.emit('getEmployees', res);
+        });
+        socket.on('processRequest', async (input) => {
+            let res = await requestProcessor.processRequest(input);
+            socket.emit('processRequest',res);
+        });
+        socket.on('checkPostAvailability', async (input)=>{
+           let res = await check.check({
+               tablename: 'NOTICES',
+               field: 'FIELD',
+               value: input.job
+           });
+           let found = res.length !== 0;
+           socket.emit('checkPostAvailability',found);
+        });
+        socket.on('sendReport', async (input) => {
+            let res = await report.report(input);
+            socket.emit('getReport',res);
+        });
+        socket.on('sendPerson', async (input) => {
+            let res = await persons.getPerson(input.token);
+            socket.emit('getPerson', res);
+        });
+        socket.on('changePassword', async (input) => {
+            let res = await changePassword.changePassword(input);
+            socket.emit('changePasswordRes',res);
         });
     });
 }

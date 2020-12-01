@@ -15,11 +15,11 @@ function addUser(id, token){
 }
 
 function getUser(token){
-    for(user in users){
-        if(user.token === token)
-            return user.id;
+    let idx = users.findIndex(user => user.token === token);
+    if(idx>=0){
+        return users[idx].id;
     }
-    return -1;
+    else return -1;
 }
 
 function getLength(){
