@@ -14,6 +14,13 @@ function addUser(id, token){
     return token;
 }
 
+function removeUser(token){
+    let idx = users.findIndex(user => user.token = token);
+    if(idx>=0){
+        users.splice(idx,1);
+    }
+}
+
 function getUser(token){
     let idx = users.findIndex(user => user.token === token);
     if(idx>=0){
@@ -29,6 +36,7 @@ function getLength(){
 module.exports = {
     addUser,
     getUser,
-    getLength
+    getLength,
+    removeUser
 };
 

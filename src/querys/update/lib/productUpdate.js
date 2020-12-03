@@ -1,5 +1,7 @@
 const dbImageUpdate = require('../../../db/dbUpdateImage');
 const dbUpdate = require('../../../db/dbUpdate');
+const idMaker = require('../../../lib/idmaker');
+const dbInsert = require('../../../db/dbInsert');
 
 function makeUpdateString(fields){
     let string = 'SET';
@@ -20,6 +22,7 @@ async function update(input){
     let idField = 'MODEL_ID';
     let res1 = true;
     let res2 = true;
+    let res3 = true;
     let id = input.id;
 
     if(input.hasImage){
@@ -39,9 +42,34 @@ async function update(input){
             WHERE ${idField} = \'${id}\'`;
         console.log(query);
         res2 = await dbUpdate.executeQuery(query);
+
+        if(input.stock>0){
+            let i=0;
+            for(i;i<input.stock;i++){
+                let pid = idMaker.makeId();
+                let q =
+                    `INSERT INTO PRODUCTS
+                     (PRODUCT_ID, MODEL_ID)
+                     VALUES(
+                     \'${pid}\',
+                     \'${id}\'
+                     )`;
+                res3 = await dbInsert.executeQuery(q);
+            }
+        }else if(input.stock<0){
+            let q =
+                `BEGIN
+                      DELETE_PRODUCTS(
+                         \'${id}\',
+                         ${(-1*input.stock)}
+                      );
+                 END;`;
+                res3 = await dbUpdate.executeQuery(q);
+        }
+
     }
 
-    if(res1 && res2){
+    if(res1 && res2 && res3){
         return {
             success: true
         };

@@ -12,6 +12,7 @@ const requestProcessor = require('../querys/update/requestProcess');
 const report = require('../querys/select/report');
 const persons = require('../querys/select/persons');
 const changePassword = require('../querys/update/changePassword');
+const users = require('./users');
 
 function setServer(server){
     const io = socketIO(server);
@@ -58,14 +59,17 @@ function setServer(server){
             let res = await login.login(data);
             socket.emit('loginInfo', res);
         });
-        socket.on('sendProductsAdmin', async () => {
+        socket.on('signout', async (data) => {
+            users.removeUser(data.token);
+        });
+        socket.on('sendProducts', async () => {
             let res = await product.getProducts();
-            socket.emit('getProductsAdmin', res);
+            socket.emit('getProducts', res);
 
         });
-        socket.on('sendProductAdmin', async (input) => {
+        socket.on('sendProduct', async (input) => {
             let res = await product.getProduct(input.id);
-            socket.emit('getProductAdmin', res);
+            socket.emit('getProduct', res);
 
         });
         socket.on('update', async (input) => {
