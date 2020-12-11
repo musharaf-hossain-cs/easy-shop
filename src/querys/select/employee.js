@@ -1,5 +1,15 @@
-const db = require('../../db/dbSelect');
+const dbSelect = require('../../db/dbSelect');
 const oracledb = require('oracledb');
+const users = require('../../lib/users');
+
+const binds = {};
+const opts = {
+    fetchInfo: {
+        IMAGE:{
+            type: oracledb.BUFFER
+        }
+    }
+};
 
 async function getEmployees(){
     const query =
@@ -10,15 +20,8 @@ async function getEmployees(){
          JOIN PERSONS P ON E.EMPLOYEE_ID = P.PERSON_ID
          JOIN JOBS J ON J.JOB_ID = E.JOB_ID
          WHERE E.STATUS = 'Active'`;
-    const binds = {};
-    const opts = {
-        fetchInfo: {
-            IMAGE:{
-                type: oracledb.BUFFER
-            }
-        }
-    };
-    return await db.executeQuery(query,binds,opts);
+
+    return await dbSelect.executeQuery(query,binds,opts);
 }
 
 async function getEmployee(id){
@@ -30,15 +33,7 @@ async function getEmployee(id){
          JOIN PERSONS P ON E.EMPLOYEE_ID = P.PERSON_ID
          JOIN JOBS J ON J.JOB_ID = E.JOB_ID
          WHERE E.EMPLOYEE_ID = \'${id}\'`;
-    const binds = {};
-    const opts = {
-        fetchInfo: {
-            IMAGE:{
-                type: oracledb.BUFFER
-            }
-        }
-    };
-    return await db.executeQuery(query,binds,opts);
+    return await dbSelect.executeQuery(query,binds,opts);
 }
 
 async function getEmployeeID(input){
@@ -46,19 +41,31 @@ async function getEmployeeID(input){
         `SELECT PERSON_ID AS "EMPLOYEE_ID"
          FROM PERSONS
          WHERE ${input.field} = \'${input.value}\'`;
-    const binds = {};
-    const opts = {
-        fetchInfo: {
-            IMAGE:{
-                type: oracledb.BUFFER
-            }
-        }
-    };
-    return await db.executeQuery(query,binds,opts);
+    return await dbSelect.executeQuery(query,binds,opts);
+}
+
+async function getEmployeeByToken(token){
+    let id = users.getUser(token);
+    return await getEmployee(id);
+}
+
+async function getEmployeeHistory(token){
+    let id = users.getUser(token);
+    let query =
+        `SELECT D.DELIVERY_ID, O.ORDER_ID, D.SHIPMENT_DATE, 
+         D.DELIVERY_DATE, P.USERNAME, P.ADDRESS
+         FROM DELIVERY D
+         JOIN ORDERS O ON O.ORDER_ID = D.ORDER_ID
+         JOIN PERSONS P ON P.PERSON_ID = O.CUSTOMER_ID
+         WHERE D.EMPLOYEE_ID = \'${id}\'`;
+    return await dbSelect.executeQuery(query,binds,opts);
+
 }
 
 module.exports = {
     getEmployee,
     getEmployees,
-    getEmployeeID
+    getEmployeeID,
+    getEmployeeByToken,
+    getEmployeeHistory
 }

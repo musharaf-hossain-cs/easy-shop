@@ -56,12 +56,13 @@ async function update(input){
                      )`;
                 res3 = await dbInsert.executeQuery(q);
             }
-        }else if(input.stock<0){
+        }else if(input.stock<0 && res2){
+            let stock = input.stock*(-1);
             let q =
                 `BEGIN
                       DELETE_PRODUCTS(
                          \'${id}\',
-                         ${(-1*input.stock)}
+                         TO_NUMBER(${stock})
                       );
                  END;`;
                 res3 = await dbUpdate.executeQuery(q);

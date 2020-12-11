@@ -13,16 +13,17 @@ const report = require('../querys/select/report');
 const persons = require('../querys/select/persons');
 const changePassword = require('../querys/update/changePassword');
 const users = require('./users');
+const carts = require('../querys/select/carts');
+const payment = require('../querys/insert/payment');
+const takeOrder = require('../querys/insert/takeOrder');
+const updateOrder = require('../querys/update/updateOrder');
+
 
 function setServer(server){
     const io = socketIO(server);
     io.on('connection', socket => {
         console.log('User Connected!');
 
-        socket.on('sendCustomers',async ()=>{
-            const customers = await select.getCustomer();
-            socket.emit('getCustomers',customers);
-        });
         socket.on('disconnect',()=>{
             console.log('User Disconnected!');
         });
@@ -50,6 +51,8 @@ function setServer(server){
                 }
                 else if(data.tablename.toLowerCase()==='employees'){
                     socket.emit('insertEmployeeRes',res);
+                }else if(data.tablename.toLowerCase()==='payments'){
+                    socket.emit('paymentInfo',res);
                 }
             }catch (e){
                 console.log(e);
@@ -72,6 +75,10 @@ function setServer(server){
             socket.emit('getProduct', res);
 
         });
+        socket.on('sendTheseProducts', async (input) => {
+            let res = await product.getTheseProducts(input);
+            socket.emit('getTheseProducts',res);
+        })
         socket.on('update', async (input) => {
             let res = await update.update(input);
             socket.emit('updateResponse',res);
@@ -88,6 +95,10 @@ function setServer(server){
             let res = await employee.getEmployee(input.id);
             socket.emit('getEmployee', res);
         });
+        socket.on('sendEmployeeByToken', async (input) => {
+            let res = await employee.getEmployeeByToken(input);
+            socket.emit('getEmployee', res);
+        });
         socket.on('sendEmployeeID', async (input) => {
             let res = await employee.getEmployeeID(input);
             socket.emit('getEmployeeID', res);
@@ -95,6 +106,10 @@ function setServer(server){
         socket.on('sendEmployees', async () => {
             let res = await employee.getEmployees();
             socket.emit('getEmployees', res);
+        });
+        socket.on('sendEmployeeHistory', async (input) => {
+            let res = await employee.getEmployeeHistory(input);
+            socket.emit('getEmployeeHistory',res);
         });
         socket.on('processRequest', async (input) => {
             let res = await requestProcessor.processRequest(input);
@@ -120,6 +135,66 @@ function setServer(server){
         socket.on('changePassword', async (input) => {
             let res = await changePassword.changePassword(input);
             socket.emit('changePasswordRes',res);
+        });
+        socket.on('sendCategories', async() => {
+            let res = await product.getCategories();
+            socket.emit('getCategories',res);
+        });
+        socket.on('sendProductsByCategory', async (input) => {
+            let res = await product.getProductsByCategory(input.category);
+            socket.emit('getProductsByCategory',res);
+        });
+        socket.on('sendSearchedProducts', async (input) => {
+            let res = await product.getSearchedProducts(input.search);
+            socket.emit('getSearchedProducts',res);
+        });
+        socket.on('saveCart', async (input) => {
+            let res = await insert.Insert(input);
+            socket.emit('saveCart',res);
+        });
+        socket.on('sendPendingCarts', async (input) => {
+            let res = await carts.getPendingCarts(input);
+            socket.emit('getPendingCarts', res);
+        });
+        socket.on('sendBoughtCarts', async (input) => {
+            let res = await carts.getBoughtCarts(input);
+            socket.emit('getBoughtCarts', res);
+        });
+        socket.on('sendCartItems', async (input) => {
+            let res = await carts.getCartItems(input);
+            socket.emit('getCartItems',res);
+        });
+        socket.on('makePayment', async (input) => {
+            let res = await payment.makePayment(input);
+            socket.emit('paymentInfo',res);
+        });
+        socket.on('sendAvailableOrders', async () => {
+            let res = await carts.getAvailableOrders();
+            socket.emit('getAvailableOrders',res);
+        });
+        socket.on('sendOrderInfo', async (input) => {
+           let res = await carts.getOrderInfo(input);
+           socket.emit('getOrderInfo',res);
+        });
+        socket.on('takeOrder', async (input) => {
+            let res = await takeOrder.takeOrder(input);
+            socket.emit('takeOrder',res);
+        });
+        socket.on('sendOrderHistory', async (input) => {
+            let res = await carts.getOrderHistory(input);
+            socket.emit('getOrderHistory', res);
+        });
+        socket.on('setOrderDelivered', async (input) => {
+            let res = updateOrder.setOrderDelivered(input);
+            socket.emit('orderUpdateInfo', res);
+        });
+        socket.on('sendWeeklySellReport', async () =>{
+            let res = await report.weeklySellReport();
+            socket.emit('getWeeklySellReport',res);
+        });
+        socket.on('sendMonthlySellReport', async () =>{
+            let res = await report.monthlySellReport();
+            socket.emit('getMonthlySellReport',res);
         });
     });
 }
